@@ -9,7 +9,8 @@ from twisted.internet.protocol import Factory
 
 from twisted.protocols.stateful import StatefulProtocol
 
-from bit.bot.common.interfaces import ISockets, ISessions, IBotSocket, ISocketRequest
+from bit.bot.common.interfaces import ISessions, IBotSocket, ISocketRequest
+from bit.core.interfaces import ISockets
 
 from bit.bot.http.events import SocketCreatedEvent, SocketLostEvent
 
@@ -49,9 +50,7 @@ class BotSocketProtocol(StatefulProtocol):
             if sess: getUtility(ISockets).add('bot',sessionid,token,self)
             request = queryAdapter(self,ISocketRequest,name=data['request'])
             if request: request.load(sessionid,sess,data)
-            else: print 'NO REQUEST ADAPTER FOR: %s' %data['request']
-            
-                
+            else: print 'NO REQUEST ADAPTER FOR: %s' %data['request']                            
 
         getUtility(ISessions).session(sessionid,token=token).addCallback(_gotSession)
 

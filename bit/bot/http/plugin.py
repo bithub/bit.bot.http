@@ -6,7 +6,9 @@ from zope.component import getUtility, provideAdapter
 from twisted.web import server
 from twisted.application.internet import TCPServer, SSLServer
 
-from bit.bot.common.interfaces import IPlugin, IWebRoot, IConfiguration, ISockets, IFlatten, IBotSocket, ISocketRequest
+from bit.core.interfaces import IConfiguration, IPlugin, ISockets
+from bit.bot.common.interfaces import IWebRoot, IFlatten, IBotSocket, ISocketRequest
+
 from bit.bot.base.plugin import BotPlugin
 from bit.bot.http.socket import WebBotSocketFactory, Sockets
 from bit.bot.http.request import AuthRequest, SubscribeRequest, MessageRequest, HeloRequest, CommandRequest
@@ -39,7 +41,6 @@ class BotHTTP(BotPlugin):
 
     def load_adapters(self):
         provideAdapter(SocketsFlattener,[ISockets,],IFlatten)        
-
         provideAdapter(AuthRequest,[IBotSocket,],ISocketRequest,name='auth')        
         provideAdapter(MessageRequest,[IBotSocket,],ISocketRequest,name='message')        
         provideAdapter(CommandRequest,[IBotSocket,],ISocketRequest,name='command')        

@@ -3,7 +3,9 @@ import json
 
 from zope.component import adapter,getUtility
 
-from bit.bot.common.interfaces import ISockets, ISubscriptions, IFlatten
+from bit.core.interfaces import ISockets
+from bit.bot.common.interfaces import ISubscriptions, IFlatten
+
 
 from bit.bot.http.events import SocketCreatedEvent, SocketLostEvent
 
