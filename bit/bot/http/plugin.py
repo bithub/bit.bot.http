@@ -40,7 +40,7 @@ class BotHTTP(BotPlugin):
         super(BotHTTP,self).load_services()        
 
     def load_adapters(self):
-        provideAdapter(HTTPPlugin,[IPlugin,],IPluginExtender)        
+        provideAdapter(HTTPPlugin,[IPlugin,],IPluginExtender,'http')        
         provideAdapter(SocketsFlattener,[ISockets,],IFlatten)        
         provideAdapter(AuthRequest,[IBotSocket,],ISocketRequest,name='auth')        
         provideAdapter(MessageRequest,[IBotSocket,],ISocketRequest,name='message')        
