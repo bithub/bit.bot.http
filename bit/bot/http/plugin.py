@@ -7,9 +7,11 @@ from twisted.web import server
 from twisted.application.internet import TCPServer, SSLServer
 
 from bit.core.interfaces import IConfiguration, IPlugin, ISockets
-from bit.bot.common.interfaces import IWebRoot, IFlatten, IBotSocket, ISocketRequest
+from bit.bot.common.interfaces import IHTTPRoot, IWebRoot, IFlatten, IBotSocket, ISocketRequest
 
 from bit.bot.base.plugin import BotPlugin
+
+from bit.bot.http.root import HTTPRoot
 from bit.bot.http.socket import WebBotSocketFactory, Sockets
 from bit.bot.http.request import AuthRequest, SubscribeRequest, MessageRequest, HeloRequest, CommandRequest
 from bit.bot.http.handlers import socket_created, socket_lost
@@ -23,7 +25,6 @@ class SSLContextFactory(object):
         ctx.use_privatekey_file(getUtility(IConfiguration).get('http','key'))
         return ctx    
 
-
 class BotHTTP(BotPlugin):
     implements(IPlugin)
     name = 'bit.bot.http'
@@ -35,7 +36,7 @@ class BotHTTP(BotPlugin):
                                           ,args=[8383,WebBotSocketFactory(),SSLContextFactory()])
                           ,'http': dict( service = TCPServer 
                                          ,args =[int(getUtility(IConfiguration).get('http','port'))
-                                                 ,server.Site(getUtility(IWebRoot))])
+                                                 ,server.Site(getUtility(IHTTPRoot))])
                           }
         super(BotHTTP,self).load_services()        
 
@@ -47,3 +48,6 @@ class BotHTTP(BotPlugin):
         provideAdapter(SubscribeRequest,[IBotSocket,],ISocketRequest,name='subscribe')        
         provideAdapter(HeloRequest,[IBotSocket,],ISocketRequest,name='helo')        
 
+    @property
+    def utils(self):
+        return [(HTTPRoot(),IHTTPRoot)]
