@@ -1,31 +1,33 @@
 
-from zope.component import getUtility
-from twisted.web.resource import Resource
-from bit.bot.common.interfaces import IWebImages, IWebCSS, IWebJS, IWebHTML, IWebJPlates
+import os
 
-class BotHTTPRoot(Resource):
+from twisted.web import static
+from twisted.web.resource import Resource
+
+
+class BotResource(Resource):
+
+    def __init__(self):
+        Resource.__init__(self)
 
     def render_GET(self, request):
-        html = getUtility(IWebHTML)
-        return html.children['bot.html'].render_GET(request)
+        return "<dl>%s</dl>" %''.join(["<dt>%s</dt><dd>%s</dd>"%(k,v) for k,v in self.children.items()])
 
-    def getChild(self,name,request):
-        if name == '':
-            return self
+    _ext = []
+    def add_resources(self,dir_target,parent=None):
+        from bit.bot.http.folder import BotFolder
+        for f in os.listdir(dir_target):
+            if os.path.isdir(os.path.join(dir_target,f)): continue
+            for ext in self._ext:
+                if f.endswith('.%s'%ext):
+                    file_path = os.path.join(dir_target,f)
+                    print 'adding base image: %s' %file_path                    
+                    (parent or self).putChild(f,static.File(file_path))        
 
-        if name == 'images':
-            return getUtility(IWebImages)
-
-        if name == 'js':
-            return getUtility(IWebJS)
-
-        if name == 'css':
-            return getUtility(IWebCSS)
-
-        if name == 'jplates':
-            return getUtility(IWebJPlates)
-
-        if name == '_html':
-            return getUtility(IWebHTML)
-
+        for subf in os.listdir(dir_target):
+            if os.path.isdir(os.path.join(dir_target,subf)):
+                if not subf in (parent or self).children:
+                    (parent or self).putChild(subf,BotFolder())
+                subresource = (parent or self).children[subf]
+                self.add_resources(os.path.join(dir_target,subf),subresource)
 
