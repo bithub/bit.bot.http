@@ -21,7 +21,9 @@ class BotResource(Resource):
             for ext in self._ext:
                 if f.endswith('.%s'%ext):
                     file_path = os.path.join(dir_target,f)
-                    print 'adding base image: %s' %file_path                    
+                    print 'adding resource: %s' %file_path                    
+                    if file_path.endswith('bot.html'):
+                        import pdb; pdb.set_trace()
                     (parent or self).putChild(f,static.File(file_path))        
 
         for subf in os.listdir(dir_target):

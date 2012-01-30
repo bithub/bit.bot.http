@@ -1,10 +1,10 @@
 
 from zope.interface import implements
-from zope.component import getUtility, queryAdapter
+from zope.component import getUtility, queryAdapter, queryUtility
 from twisted.web import server
 from twisted.web.resource import Resource
 
-from bit.bot.common.interfaces import IHTTPRoot, IHTTPResource
+from bit.bot.common.interfaces import IHTTPRoot, IHTTPResource, IWebRoot
 
 class HTTPRoot(Resource):
     implements(IHTTPRoot)
@@ -13,7 +13,6 @@ class HTTPRoot(Resource):
 
     def getChild(self,name,request):
         if name == '':
-            return self
-        return queryAdapter(self,IHTTPResource,name)
-        return WebSession()
-    
+            web = queryUtility(IWebRoot)
+            return web or self
+        return getUtility(IHTTPRoot,name)
