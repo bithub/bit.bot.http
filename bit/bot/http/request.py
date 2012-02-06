@@ -77,8 +77,6 @@ class MessageRequest(SocketRequest):
 
     def load(self,sessionid,sess,data):
         kernel = getUtility(IIntelligent).bot
-        def respond(msg):
-            self.response(dict(emit={'respond': msg}))
 
         if sess:
             self.session_id = sess.jid        
@@ -86,10 +84,14 @@ class MessageRequest(SocketRequest):
             notify(SocketSessionEvent(self).update(sessionid))
             kernel.setPredicate('secure',"yes",sess.jid)
             kernel.setPredicate('name',sess.jid.split('@')[0],sess.jid)                        
-            return getUtility(IIntelligent).respond(self, data['message'].strip()).addCallback(respond)
+            return getUtility(IIntelligent).respond(self, data['message'].strip()).addCallback(self.speak)
         self.session_id = 'anon@chat.3ca.org.uk/%s'%sessionid   
-        return getUtility(IIntelligent).respond(self, data['message'].strip()).addCallback(respond)
+        return getUtility(IIntelligent).respond(self, data['message'].strip()).addCallback(self.speak)
             
+    def speak(self,msg):
+        self.response(dict(emit={'respond': msg}))
+
+
 class SubscribeRequest(SocketRequest):
     implements(ISocketRequest)
     def load(self,sessionid,sess,data):

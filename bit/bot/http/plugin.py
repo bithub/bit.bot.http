@@ -28,8 +28,8 @@ class BotHTTP(BotPlugin):
     implements(IPlugin)
     name = 'bit.bot.http'
     _handlers = [socket_created,socket_lost]        
-    _utils = [(Sockets(),ISockets)]
-
+    _utils = [(Sockets(),ISockets)
+              ,(HTTPRoot(),IHTTPRoot)]              
     def load_services(self):
         self._services = {'socket': dict( service=SSLServer
                                           ,args=[8383,WebBotSocketFactory(),SSLContextFactory()])
@@ -49,6 +49,4 @@ class BotHTTP(BotPlugin):
         provideAdapter(SubscribeRequest,[IBotSocket,],ISocketRequest,name='subscribe')        
         provideAdapter(HeloRequest,[IBotSocket,],ISocketRequest,name='helo')        
 
-    @property
-    def utils(self):
-        return [(HTTPRoot(),IHTTPRoot)]
+

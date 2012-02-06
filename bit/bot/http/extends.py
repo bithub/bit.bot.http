@@ -23,7 +23,6 @@ class HTTPPlugin(object):
                for rtype in os.listdir(target):
                   resource = queryUtility(IHTTPRoot,rtype)
                   if not resource: continue
-                  print 'adding %s %s' %(target,rtype)
                   resource.add_resources(os.path.join(target,rtype))
 
 
