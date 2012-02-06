@@ -33,9 +33,10 @@ class BotHTTP(BotPlugin):
     def load_services(self):
         self._services = {'socket': dict( service=SSLServer
                                           ,args=[8383,WebBotSocketFactory(),SSLContextFactory()])
-                          ,'http': dict( service = TCPServer 
+                          ,'http': dict( service = SSLServer 
                                          ,args =[int(getUtility(IConfiguration).get('http','port'))
-                                                 ,server.Site(getUtility(IHTTPRoot))])
+                                                 ,server.Site(getUtility(IHTTPRoot))
+                                                 ,SSLContextFactory()])
                           }
         super(BotHTTP,self).load_services()        
 
