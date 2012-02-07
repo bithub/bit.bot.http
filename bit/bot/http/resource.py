@@ -22,7 +22,7 @@ class BotResource(Resource):
                 if f.endswith('.%s'%ext):
                     file_path = os.path.join(dir_target,f)
                     print 'adding resource: %s' %file_path                    
-                    (parent or self).putChild(f,static.File(file_path))        
+                    (parent or self).putChild(f,static.File(file_path))
 
         for subf in os.listdir(dir_target):
             if os.path.isdir(os.path.join(dir_target,subf)):
@@ -30,4 +30,3 @@ class BotResource(Resource):
                     (parent or self).putChild(subf,BotFolder())
                 subresource = (parent or self).children[subf]
                 self.add_resources(os.path.join(dir_target,subf),subresource)
-
