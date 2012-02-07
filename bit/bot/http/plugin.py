@@ -17,6 +17,8 @@ from bit.bot.http.handlers import socket_created, socket_lost
 from bit.bot.http.flat import SocketsFlattener
 from bit.bot.http.extends import HTTPPlugin
 
+from bit.bot.http.policy import FlashPolicyFactory
+
 class SSLContextFactory(object):
    def getContext(self):
         ctx = SSL.Context(SSL.SSLv23_METHOD)
@@ -37,6 +39,8 @@ class BotHTTP(BotPlugin):
                                          ,args =[int(getUtility(IConfiguration).get('http','port'))
                                                  ,server.Site(getUtility(IHTTPRoot))
                                                  ,SSLContextFactory()])
+                          ,'flash-policy': dict( service=TCPServer
+                                                 ,args=[843,FlashPolicyFactory()])
                           }
         super(BotHTTP,self).load_services()        
 
