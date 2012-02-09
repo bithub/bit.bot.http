@@ -22,8 +22,8 @@ from bit.bot.http.policy import FlashPolicyFactory
 class SSLContextFactory(object):
    def getContext(self):
         ctx = SSL.Context(SSL.SSLv23_METHOD)
-        ctx.use_certificate_file(getUtility(IConfiguration).get('http','cert'))
-        ctx.use_privatekey_file(getUtility(IConfiguration).get('http','key'))
+        ctx.use_certificate_file(getUtility(IConfiguration).get('https','cert'))
+        ctx.use_privatekey_file(getUtility(IConfiguration).get('https','key'))
         return ctx    
 
 class BotHTTP(BotPlugin):
@@ -33,14 +33,16 @@ class BotHTTP(BotPlugin):
     _utils = [(Sockets(),ISockets)
               ,(HTTPRoot(),IHTTPRoot)]              
     def load_services(self):
-        self._services = {'socket': dict( service=SSLServer
-                                          ,args=[8383,WebBotSocketFactory(),SSLContextFactory()])
-                          ,'http': dict( service = SSLServer 
-                                         ,args =[int(getUtility(IConfiguration).get('http','port'))
-                                                 ,server.Site(getUtility(IHTTPRoot))
-                                                 ,SSLContextFactory()])
+        self._services = {'wss': dict( service=SSLServer
+                                       ,args=[int(getUtility(IConfiguration).get('wss','port'))
+                                              ,WebBotSocketFactory()
+                                              ,SSLContextFactory()])
                           ,'flash-policy': dict( service=TCPServer
                                                  ,args=[843,FlashPolicyFactory()])
+                          ,'https': dict( service = SSLServer 
+                                         ,args =[int(getUtility(IConfiguration).get('https','port'))
+                                                 ,server.Site(getUtility(IHTTPRoot))
+                                                 ,SSLContextFactory()])
                           }
         super(BotHTTP,self).load_services()        
 

@@ -11,7 +11,6 @@ policy = """
 class PolicyProtocol(Protocol):
 
     def connectionMade(self):
-        import pdb; pdb.set_trace()
         self.transport.write(policy)
         self.transport.loseConnection()
 

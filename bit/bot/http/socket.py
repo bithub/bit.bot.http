@@ -26,7 +26,6 @@ class BotSocketProtocol(StatefulProtocol):
         bit['bot'] = bot
         emit = {}
         emit['connection-made'] = ''
-
         self.transport.write(json.dumps(dict(bit=bit,emit=emit)))
         
     def connectionLost(self,reason):
