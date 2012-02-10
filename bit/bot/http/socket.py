@@ -51,6 +51,7 @@ class BotSocketProtocol(StatefulProtocol):
             if request: request.load(sessionid,sess,data)
             else: print 'NO REQUEST ADAPTER FOR: %s' %data['request']                            
 
+
         getUtility(ISessions).session(sessionid,token=token).addCallback(_gotSession)
 
 

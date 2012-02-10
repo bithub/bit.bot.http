@@ -64,7 +64,6 @@ class AuthRequest(SocketRequest):
             # is this session an existing session?
             sessions.sessions(jid=person_jid,session_type="curate").addCallback(_gotThisSession,anon_jid,person)
         
-
         anon_jid = 'anon@chat.3ca.org.uk/%s'%sessionid
         personname = kernel.getPredicate(kernel._inputHistory,anon_jid)[-1:].pop().strip()
         return getUtility(IMembers).auth(personname,data['password'].strip()).addCallback(isauth,personname,anon_jid)
