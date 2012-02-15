@@ -7,7 +7,7 @@ from twisted.web import server
 from twisted.application.internet import TCPServer, SSLServer
 
 from bit.core.interfaces import IConfiguration, IPlugin, ISockets, IPluginExtender
-from bit.bot.common.interfaces import IHTTPRoot, IWebRoot, IFlatten, IBotSocket, ISocketRequest
+from bit.bot.common.interfaces import IHTTPRoot, IWebRoot, IFlatten, IBotSocket, ISocketRequest, IResourceRegistry
 
 from bit.bot.base.plugin import BotPlugin
 from bit.bot.http.root import HTTPRoot
@@ -32,6 +32,8 @@ class BotHTTP(BotPlugin):
     _handlers = [socket_created,socket_lost]        
     _utils = [(Sockets(),ISockets)
               ,(HTTPRoot(),IHTTPRoot)]              
+    _http = {'root': 'resources'}
+
     def load_services(self):
         self._services = {'wss': dict( service=SSLServer
                                        ,args=[int(getUtility(IConfiguration).get('wss','port'))
@@ -56,3 +58,6 @@ class BotHTTP(BotPlugin):
         provideAdapter(HeloRequest,[IBotSocket,],ISocketRequest,name='helo')        
 
 
+    def load_JS(self):
+       js = getUtility(IResourceRegistry,'js')
+       js.add('jquery-min.js',{'rel':'link'})
