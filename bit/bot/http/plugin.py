@@ -26,38 +26,6 @@ class SSLContextFactory(object):
         ctx.use_privatekey_file(getUtility(IConfiguration).get('https','key'))
         return ctx    
 
-class BotHTTP(BotPlugin):
-    implements(IPlugin)
-    name = 'bit.bot.http'
-    _handlers = [socket_created,socket_lost]        
-    _utils = [(Sockets(),ISockets)
-              ,(HTTPRoot(),IHTTPRoot)]              
-    _http = {'root': 'resources'}
-
-    def load_services(self):
-        self._services = {'wss': dict( service=SSLServer
-                                       ,args=[int(getUtility(IConfiguration).get('wss','port'))
-                                              ,WebBotSocketFactory()
-                                              ,SSLContextFactory()])
-                          ,'flash-policy': dict( service=TCPServer
-                                                 ,args=[843,FlashPolicyFactory()])
-                          ,'https': dict( service = SSLServer 
-                                         ,args =[int(getUtility(IConfiguration).get('https','port'))
-                                                 ,server.Site(getUtility(IHTTPRoot))
-                                                 ,SSLContextFactory()])
-                          }
-        super(BotHTTP,self).load_services()        
-
-    def load_adapters(self):
-        provideAdapter(HTTPPlugin,[IPlugin,],IPluginExtender,'http')        
-        provideAdapter(SocketsFlattener,[ISockets,],IFlatten)        
-        provideAdapter(AuthRequest,[IBotSocket,],ISocketRequest,name='auth')        
-        provideAdapter(MessageRequest,[IBotSocket,],ISocketRequest,name='message')        
-        provideAdapter(CommandRequest,[IBotSocket,],ISocketRequest,name='command')        
-        provideAdapter(SubscribeRequest,[IBotSocket,],ISocketRequest,name='subscribe')        
-        provideAdapter(HeloRequest,[IBotSocket,],ISocketRequest,name='helo')        
 
 
-    def load_JS(self):
-       js = getUtility(IResourceRegistry,'js')
-       js.add('jquery-min.js',{'rel':'link'})
+

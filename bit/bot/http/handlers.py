@@ -10,6 +10,7 @@ from bit.bot.common.interfaces import ISubscriptions, IFlatten
 from bit.bot.http.events import SocketCreatedEvent, SocketLostEvent
 
 def socket_updated(evt):
+    print 'SOCKET UPDATE'
     subs = getUtility(ISubscriptions)
     def _gotSockets(sockets):
         if 'sockets-changed' in subs.subscriptions:

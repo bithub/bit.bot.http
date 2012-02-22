@@ -1,0 +1,35 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope">
+
+  <http filepath="./resources" />
+
+  <js name="jquery-min.js" />
+
+  <service
+      parent="bit.bot.http"
+      name="https"      
+      service="twisted.application.internet.SSLServer"
+      port=".https.getHTTPSPort"
+      factory=".https.getHTTPSSite"
+      context=".https.SSLContextFactory"
+      />
+
+  <service
+      parent="bit.bot.http"
+      name="wss"      
+      service="twisted.application.internet.SSLServer"
+      port=".https.getWSSPort"
+      factory=".socket.WebBotSocketFactory"
+      context=".https.SSLContextFactory"
+      />
+
+  <service
+      parent="bit.bot.http"
+      name="flash-policy"      
+      service="twisted.application.internet.TCPServer"
+      port=".https.getFlashPolicyPort"
+      factory=".policy.FlashPolicyFactory"
+      />
+
+</configure>
+

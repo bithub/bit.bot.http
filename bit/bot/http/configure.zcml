@@ -1,0 +1,53 @@
+<configure 
+    xmlns="http://namespaces.zope.org/zope"
+    i18n_domain="bit.bot.base">
+  <include package="bit.bot.base" />
+  <subscriber
+      handler=".handlers.socket_created"
+      />
+  <subscriber
+      handler=".handlers.socket_lost"
+      />
+  <adapter
+      factory=".extends.HTTPPlugin"
+      for="bit.core.interfaces.IPlugin"
+      name="http"
+      />
+  <adapter
+      factory=".flat.SocketsFlattener"
+      for="bit.core.interfaces.ISockets"
+      />
+  <adapter
+      factory=".request.AuthRequest"
+      for="bit.bot.common.interfaces.IBotSocket"
+      name="auth"
+      />
+  <adapter
+      factory=".request.MessageRequest"
+      for="bit.bot.common.interfaces.IBotSocket"
+      name="message"
+      />
+  <adapter
+      factory=".request.CommandRequest"
+      for="bit.bot.common.interfaces.IBotSocket"
+      name="command"
+      />
+  <adapter
+      factory=".request.SubscribeRequest"
+      for="bit.bot.common.interfaces.IBotSocket"
+      name="subscribe"
+      />
+  <adapter
+      factory=".request.HeloRequest"
+      for="bit.bot.common.interfaces.IBotSocket"
+      name="helo"
+      />
+
+  <utility
+      component=".socket.sockets"
+      />  
+  <utility
+      component=".root.http_root"
+      provides="bit.bot.common.interfaces.IHTTPRoot"
+      />  
+</configure>

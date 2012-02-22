@@ -107,3 +107,5 @@ class Sockets(object):
 
 
 WebBotSocketFactory = lambda: WebSocketFactory(BotSocketFactory())
+sockets = Sockets()
+

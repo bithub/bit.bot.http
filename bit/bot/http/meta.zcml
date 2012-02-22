@@ -1,0 +1,15 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:meta="http://namespaces.zope.org/meta">
+  <include 
+      package="bit.bot.base" 
+      file="meta.zcml" 
+      />
+  <meta:directives namespace="http://namespaces.zope.org/zope">
+    <meta:directive
+        name="http"
+        schema=".zcml.IHTTPDirective"
+        handler=".zcml.http"
+        />
+  </meta:directives>
+</configure>

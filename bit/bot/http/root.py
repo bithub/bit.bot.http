@@ -16,3 +16,5 @@ class HTTPRoot(Resource):
             web = queryUtility(IWebRoot)
             return web or self
         return getUtility(IHTTPRoot,name)
+
+http_root = HTTPRoot()
