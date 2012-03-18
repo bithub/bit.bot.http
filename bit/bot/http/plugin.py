@@ -1,6 +1,4 @@
 
-from OpenSSL import SSL
-
 from zope.interface import implements
 from zope.component import getUtility, provideAdapter
 from twisted.web import server
@@ -18,13 +16,6 @@ from bit.bot.http.flat import SocketsFlattener
 from bit.bot.http.extends import HTTPPlugin
 
 from bit.bot.http.policy import FlashPolicyFactory
-
-class SSLContextFactory(object):
-   def getContext(self):
-        ctx = SSL.Context(SSL.SSLv23_METHOD)
-        ctx.use_certificate_file(getUtility(IConfiguration).get('https','cert'))
-        ctx.use_privatekey_file(getUtility(IConfiguration).get('https','key'))
-        return ctx    
 
 
 

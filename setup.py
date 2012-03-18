@@ -3,6 +3,12 @@ import os
 
 version = '0.0.8'
 
+try:
+    # android
+    from py4a import patch_distutils
+    patch_distutils()
+except: pass
+
 setup(name='bit.bot.http',
       version=version,
       description="Bit Bot HTTP",

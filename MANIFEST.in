@@ -1,0 +1,13 @@
+include *.txt
+recursive-include docs *
+global-include *zcml
+global-include *png
+global-include *gif
+global-include *html
+global-include *tpl
+global-include *css
+global-include *js
+
+global-exclude *pyc
+
+

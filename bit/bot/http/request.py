@@ -7,8 +7,6 @@ from zope.event import notify
 
 from bit.bot.common.interfaces import IIntelligent, ISessions, ISubscriptions, IMembers, ISocketRequest
 
-from bit.bot.people.events import  SocketSessionEvent, ClientAuthEvent
-
 class SocketRequest(object):
     def __init__(self,proto):
         self.proto = proto
@@ -99,8 +97,11 @@ class SubscribeRequest(SocketRequest):
 class HeloRequest(SocketRequest):
     implements(ISocketRequest)
     def load(self,sessionid,sess,data):
-        notify(ClientAuthEvent(self.proto).update(sessionid,data,sess))
-
+        try:
+            from bit.bot.people.events import ClientAuthEvent
+            notify(ClientAuthEvent(self.proto).update(sessionid,data,sess))
+        except:
+            pass
 
 
 class CommandRequest(SocketRequest):
@@ -116,7 +117,10 @@ class CommandRequest(SocketRequest):
         if sess:
             self.session_id = sess.jid        
             getUtility(ISessions).stamp(sessionid)
-            notify(SocketSessionEvent(self).update(sessionid))
+            try:
+                from bit.bot.people.events import  SocketSessionEvent
+                notify(SocketSessionEvent(self).update(sessionid))
+            except: pass
             kernel.setPredicate('secure',"yes",sess.jid)
             kernel.setPredicate('name',sess.jid.split('@')[0],sess.jid)                        
             return getUtility(IIntelligent).command(self, data['command'].strip(), data['args']).addCallback(respond)
