@@ -6,6 +6,9 @@
       handler=".handlers.socket_created"
       />
   <subscriber
+      handler=".handlers.client_auth"
+      />
+  <subscriber
       handler=".handlers.socket_lost"
       />
   <adapter

@@ -7,6 +7,8 @@ from zope.event import notify
 
 from bit.bot.common.interfaces import IIntelligent, ISessions, ISubscriptions, IMembers, ISocketRequest
 
+from bit.bot.http.events import ClientAuthEvent
+
 class SocketRequest(object):
     def __init__(self,proto):
         self.proto = proto
@@ -97,11 +99,8 @@ class SubscribeRequest(SocketRequest):
 class HeloRequest(SocketRequest):
     implements(ISocketRequest)
     def load(self,sessionid,sess,data):
-        try:
-            from bit.bot.people.events import ClientAuthEvent
-            notify(ClientAuthEvent(self.proto).update(sessionid,data,sess))
-        except:
-            pass
+        notify(ClientAuthEvent(self.proto).update(sessionid,data,sess))
+            
 
 
 class CommandRequest(SocketRequest):

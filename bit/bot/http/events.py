@@ -19,3 +19,13 @@ class SocketLostEvent(object):
         self.reason = reason
         return self
 
+class ClientAuthEvent(object):
+    def __init__(self,socket):
+        self.socket = socket
+
+    def update(self,session_id,data,sess):
+        self.session_id = session_id
+        self.data = data
+        self.session = sess
+        return self
+
