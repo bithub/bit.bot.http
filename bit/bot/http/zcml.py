@@ -43,12 +43,12 @@ class ICSSDirective(zope.interface.Interface):
     """
     name = zope.schema.TextLine(
         title=_("CSS file name"),
-        description=_("The name of this CSS resource"),       
+        description=_("The name of this CSS resource"),
         required=True,
         )
     rel = zope.schema.TextLine(
-        title=_("Relationship"), 
-        description=_("The css path"),       
+        title=_("Relationship"),
+        description=_("The css path"),
         required=False,
         )
 
@@ -68,12 +68,12 @@ class IJSDirective(zope.interface.Interface):
     """
     name = zope.schema.TextLine(
         title=_("JS file name"),
-        description=_("The name of this JS resource"),       
+        description=_("The name of this JS resource"),
         required=True,
         )
     rel = zope.schema.TextLine(
-        title=_("Relationship"), 
-        description=_("The js path"),       
+        title=_("Relationship"),
+        description=_("The js path"),
         required=False,
         )
 

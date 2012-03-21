@@ -36,13 +36,13 @@ class JSRegistry(ResourceRegistry):
     def resources(self):
         js = getUtility(IHTTPRoot, 'js')
         for _resid in self._resources:
-            parts = _resid.split('/')                
+            parts = _resid.split('/')
             resid = parts.pop()
-            folder = js            
+            folder = js
             if len(parts):
                 for part in parts:
                     if part in folder.children:
-                        folder = folder.children[part]                
+                        folder = folder.children[part]
             if resid in folder.children:
                 resource = IWebResource(js)
                 resource.update(dict(path=_resid,
