@@ -23,6 +23,16 @@ setup(name='bit.bot.http',
       zip_safe=False,
       install_requires=[
           'setuptools',
+          'zope.interface',
+          'zope.component',
+          'zope.event',
+          'zope.i8nmessageid',
+          'twisted',
+          'bit.core',
+          'bit.bot.common',
+          'bit.bot.base',
+          'pyOpenSSL',
+          'txws',          
       ],
       entry_points="""
       # -*- Entry points: -*-
