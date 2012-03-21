@@ -27,7 +27,7 @@ class IHTTPDirective(zope.interface.Interface):
 def http(_context, filepath, path=None):
     for rtype in os.listdir(filepath):
         resource = zope.component.queryUtility(
-            bit.bot.common.interfaces.IHTTPRoot, rtype)
+            bit.bot.http.interfaces.IHTTPRoot, rtype)
         if not resource:
             continue
         _context.action(

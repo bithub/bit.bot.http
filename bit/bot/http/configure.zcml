@@ -46,7 +46,7 @@
       />  
   <utility
       component=".root.http_root"
-      provides="bit.bot.common.interfaces.IHTTPRoot"
+      provides="bit.bot.http.interfaces.IHTTPRoot"
       />  
 
   <utility
