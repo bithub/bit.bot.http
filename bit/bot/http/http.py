@@ -1,8 +1,9 @@
-
 from zope.component import getUtility
 
 from twisted.web.resource import Resource
-from bit.bot.common.interfaces import IWebImages, IWebCSS, IWebJS, IWebHTML, IWebJPlates
+from bit.bot.common.interfaces import IWebImages, IWebCSS,\
+    IWebJS, IWebHTML, IWebJPlates
+
 
 class BotHTTPRoot(Resource):
 
@@ -10,7 +11,7 @@ class BotHTTPRoot(Resource):
         html = getUtility(IWebHTML)
         return html.children['bot.html'].render_GET(request)
 
-    def getChild(self,name,request):
+    def getChild(self, name, request):
         if name == '':
             return self
 
@@ -28,5 +29,3 @@ class BotHTTPRoot(Resource):
 
         if name == '_html':
             return getUtility(IWebHTML)
-
-
