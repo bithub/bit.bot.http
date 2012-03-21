@@ -32,7 +32,7 @@ setup(name='bit.bot.http',
           'bit.bot.common',
           'bit.bot.base',
           'pyOpenSSL',
-          'txws',          
+          'txws',
       ],
       entry_points="""
       # -*- Entry points: -*-

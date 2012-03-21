@@ -11,5 +11,15 @@
         schema=".zcml.IHTTPDirective"
         handler=".zcml.http"
         />
+    <meta:directive
+        name="css"
+        schema=".zcml.ICSSDirective"
+        handler=".zcml.css"
+        />
+    <meta:directive
+        name="js"
+        schema=".zcml.IJSDirective"
+        handler=".zcml.js"
+        />
   </meta:directives>
 </configure>

@@ -12,11 +12,6 @@
       handler=".handlers.socket_lost"
       />
   <adapter
-      factory=".extends.HTTPPlugin"
-      for="bit.core.interfaces.IPlugin"
-      name="http"
-      />
-  <adapter
       factory=".flat.SocketsFlattener"
       for="bit.core.interfaces.ISockets"
       />
@@ -53,4 +48,14 @@
       component=".root.http_root"
       provides="bit.bot.common.interfaces.IHTTPRoot"
       />  
+
+  <utility
+      component=".css.css_registry"
+      name="css"
+      />  
+  <utility
+      component=".js.js_registry"
+      name="js"
+      />  
+
 </configure>
