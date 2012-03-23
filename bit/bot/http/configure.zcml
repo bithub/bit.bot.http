@@ -49,6 +49,50 @@
       provides="bit.bot.http.interfaces.IHTTPRoot"
       />  
 
+  <adapter
+      factory=".css.BotCSS"
+      for="bit.bot.http.interfaces.IHTTPRoot"
+      provides="bit.bot.http.interfaces.IHTTPResource"
+      name="css"
+      />
+  <adapter
+      factory=".js.BotJS"
+      for="bit.bot.http.interfaces.IHTTPRoot"
+      provides="bit.bot.http.interfaces.IHTTPResource"
+      name="js"
+      />
+  <adapter
+      factory=".html.BotHTML"
+      for="bit.bot.http.interfaces.IHTTPRoot"
+      provides="bit.bot.http.interfaces.IHTTPResource"
+      name="html"
+      />
+  <adapter
+      factory=".css.WebCSS"
+      provides="bit.bot.common.interfaces.IWebResource"
+      for="bit.bot.common.interfaces.IWebCSS"
+      />
+  <adapter
+      factory=".js.WebJS"
+      provides="bit.bot.common.interfaces.IWebResource"
+      for="bit.bot.common.interfaces.IWebJS"
+      />
+  <utility
+      factory=".html.botHTMLResources"
+      name="html"
+      />
+  <utility
+      factory=".html.botHTML"
+      name="html"
+      />
+  <utility
+      factory=".js.botJS"
+      name="js"
+      />
+  <utility
+      factory=".css.botCSS"
+      name="css"
+      />
   <utility
       component=".css.css_registry"
       name="css"

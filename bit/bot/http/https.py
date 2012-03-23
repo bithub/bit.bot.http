@@ -5,7 +5,7 @@ from zope.component import getUtility
 from twisted.web import server
 
 from bit.core.interfaces import IConfiguration
-from bit.bot.common.interfaces import IHTTPRoot
+from bit.bot.http.interfaces import IHTTPRoot
 
 
 def getHTTPSPort():

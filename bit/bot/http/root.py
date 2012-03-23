@@ -3,7 +3,8 @@ from zope.component import getUtility, queryUtility
 
 from twisted.web.resource import Resource
 
-from bit.bot.common.interfaces import IHTTPRoot, IWebRoot
+from bit.bot.common.interfaces import IWebRoot
+from bit.bot.http.interfaces import IHTTPRoot
 
 
 class HTTPRoot(Resource):

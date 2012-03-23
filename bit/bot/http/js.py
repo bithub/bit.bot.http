@@ -1,8 +1,8 @@
 from zope.interface import implements, implementer
 from zope.component import getUtility, getAdapter
 
-from bit.bot.common.interfaces import IWebJS, IResourceRegistry,\
-    IHTTPRoot, IWebResource, IHTTPResource
+from bit.bot.common.interfaces import IWebJS, IWebResource
+from bit.bot.http.interfaces import  IResourceRegistry, IHTTPRoot, IHTTPResource
 from bit.bot.http.resource import BotResource
 from bit.bot.http.registry import ResourceRegistry
 

@@ -57,7 +57,7 @@ def css(_context, name, rel=None):
     _context.action(
         discriminator=None,
         callable=zope.component.getUtility(
-            bit.bot.common.interfaces.IResourceRegistry, 'css').add,
+            bit.bot.http.interfaces.IResourceRegistry, 'css').add,
         args=(name, {'rel': rel or 'link'})
         )
 
@@ -82,6 +82,6 @@ def js(_context, name, rel=None):
     _context.action(
         discriminator=None,
         callable=zope.component.getUtility(
-            bit.bot.common.interfaces.IResourceRegistry, 'js').add,
+            bit.bot.http.interfaces.IResourceRegistry, 'js').add,
         args=(name, {'rel': rel or 'link'})
         )
