@@ -38,7 +38,7 @@ def socket_lost(evt):
 def client_auth(evt):
     return evt.socket.transport.write(
         json.dumps(dict(
-                emit={'helo': ''},
+                emit={'helo': evt.session_id},
                 bit=dict(
                     bot=dict(
                         session=(dict(jid='anon@chat.3ca.org.uk/'

@@ -94,7 +94,7 @@ class MessageRequest(SocketRequest):
         if sess:
             self.session_id = sess.jid
             getUtility(ISessions).stamp(sessionid)
-            notify(SocketSessionEvent(self).update(sessionid))
+            #notify(SocketSessionEvent(self).update(sessionid))
             kernel.setPredicate('secure', "yes", sess.jid)
             kernel.setPredicate('name', sess.jid.split('@')[0], sess.jid)
             return getUtility(IIntelligent).respond(
