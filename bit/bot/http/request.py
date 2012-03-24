@@ -20,7 +20,7 @@ class AuthRequest(SocketRequest):
     implements(ISocketRequest)
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: AuthRequest.load ',data['message'])
+        log.msg('bit.bot.http.request: AuthRequest.load ', data['message'])
         kernel = getUtility(IIntelligent).bot
 
         def _gotSession(sess):
@@ -93,7 +93,7 @@ class MessageRequest(SocketRequest):
         self.proto.transport.write(json.dumps(msg))
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: MessageRequest.load: ',data['message'])
+        log.msg('bit.bot.http.request: MessageRequest.load: ', data['message'])
         kernel = getUtility(IIntelligent).bot
 
         if sess:
@@ -109,7 +109,7 @@ class MessageRequest(SocketRequest):
             self, data['message'].strip()).addCallback(self.speak)
 
     def speak(self, msg):
-        log.msg('bit.bot.http.request: MessageRequest.speak ',msg)
+        log.msg('bit.bot.http.request: MessageRequest.speak ', msg)
         self.response(dict(emit={'respond': msg}))
 
 
@@ -117,7 +117,8 @@ class SubscribeRequest(SocketRequest):
     implements(ISocketRequest)
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: SubscribeRequest.load ',data['message'])
+        log.msg('bit.bot.http.request: SubscribeRequest.load ',
+                data['message'])
         getUtility(ISubscriptions).subscribe(
             data['subscribe'], sessionid, self.proto.transport.write)
 
@@ -134,11 +135,13 @@ class CommandRequest(SocketRequest):
     implements(ISocketRequest)
 
     def response(self, msg):
-        log.msg('bit.bot.http.request: CommandRequest.response ',data['message'])
+        log.msg('bit.bot.http.request: CommandRequest.response ',
+                msg)
         self.proto.transport.write(json.dumps(msg))
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: CommandRequest.load ',data['message'])
+        log.msg('bit.bot.http.request: CommandRequest.load ',
+                data['message'])
         kernel = getUtility(IIntelligent).bot
 
         def respond(msg):
