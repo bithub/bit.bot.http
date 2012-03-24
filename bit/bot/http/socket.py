@@ -1,6 +1,6 @@
 import json
 
-from zope.component import getUtility, queryAdapter
+from zope.component import getUtility, queryAdapter, getAdapter
 from zope.interface import implements
 from zope.event import notify
 
@@ -52,6 +52,22 @@ class BotSocketProtocol(StatefulProtocol):
             if sess:
                 getUtility(ISockets).add('bot', sessionid, token, self)
             request = queryAdapter(self, ISocketRequest, name=data['request'])
+
+            if data['request'] == 'message':
+                message = data['message']
+                if message.startswith('>'):
+                    request = getAdapter(self, ISocketRequest, name="command")
+                    message = message[1:]
+                    data['command'] = message.strip().split(' ')[0]
+                    data['args'] = ' '.join(message.strip().split(' ')[1:])
+                elif message.startswith('~'):
+                    request = getAdapter(self, ISocketRequest, name="subscribe")
+                    data['subscribe'] = message[1:]
+                else:
+                    request = getAdapter(self, ISocketRequest, name="message")
+            else:
+                request = queryAdapter(self, ISocketRequest, name=data['request'])
+
             if request:
                 request.load(sessionid, sess, data)
             else:

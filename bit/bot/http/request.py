@@ -1,15 +1,16 @@
 import json
 
-from zope.component import getUtility
+from zope.component import getUtility, queryAdapter
 from zope.interface import implements
 from zope.event import notify
 
 from twisted.python import log
 
+from bit.core.interfaces import ICommand
 from bit.bot.common.interfaces import IIntelligent, ISessions,\
-    ISubscriptions, IMembers, ISocketRequest
+    ISubscriptions, IMembers
 from bit.bot.http.events import ClientAuthEvent
-
+from bit.bot.http.interfaces import IHTTPSocketRequest
 
 class SocketRequest(object):
     def __init__(self, proto):
@@ -17,7 +18,7 @@ class SocketRequest(object):
 
 
 class AuthRequest(SocketRequest):
-    implements(ISocketRequest)
+    implements(IHTTPSocketRequest)
 
     def load(self, sessionid, sess, data):
         log.msg('bit.bot.http.request: AuthRequest.load ', data['message'])
@@ -86,7 +87,7 @@ class AuthRequest(SocketRequest):
 
 
 class MessageRequest(SocketRequest):
-    implements(ISocketRequest)
+    implements(IHTTPSocketRequest)
 
     def response(self, msg):
         log.msg('bit.bot.http.request: MessageRequest.response: ', msg)
@@ -114,7 +115,7 @@ class MessageRequest(SocketRequest):
 
 
 class SubscribeRequest(SocketRequest):
-    implements(ISocketRequest)
+    implements(IHTTPSocketRequest)
 
     def load(self, sessionid, sess, data):
         log.msg('bit.bot.http.request: SubscribeRequest.load ',
@@ -124,7 +125,7 @@ class SubscribeRequest(SocketRequest):
 
 
 class HeloRequest(SocketRequest):
-    implements(ISocketRequest)
+    implements(IHTTPSocketRequest)
 
     def load(self, sessionid, sess, data):
         log.msg('bit.bot.http.request: HeloRequest.load ', sessionid)
@@ -132,7 +133,7 @@ class HeloRequest(SocketRequest):
 
 
 class CommandRequest(SocketRequest):
-    implements(ISocketRequest)
+    implements(IHTTPSocketRequest)
 
     def response(self, msg):
         log.msg('bit.bot.http.request: CommandRequest.response ',
@@ -140,26 +141,18 @@ class CommandRequest(SocketRequest):
         self.proto.transport.write(json.dumps(msg))
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: CommandRequest.load ',
-                data['message'])
-        kernel = getUtility(IIntelligent).bot
+        log.msg('bit.bot.http.request: CommandRequest.load: ',
+                sessionid, data['message'])
+        self.session_id = sessionid
+        msg = data['command']
+        command_name = msg.strip().split(' ')[0]
+        command = queryAdapter(self, ICommand, command_name)
+        self.session_id = sessionid
+        if not command:
+            command = queryAdapter(self, ICommand)
+            msg = 'help %s' % command_name
+        return command.load(sessionid, msg).addCallback(self.response)
 
-        def respond(msg):
-            self.response(dict(emit={'respond': msg}))
-
-        if sess:
-            self.session_id = sess.jid
-            getUtility(ISessions).stamp(sessionid)
-            try:
-                from bit.bot.people.events import  SocketSessionEvent
-                notify(SocketSessionEvent(self).update(sessionid))
-            except:
-                pass
-            kernel.setPredicate('secure', "yes", sess.jid)
-            kernel.setPredicate('name', sess.jid.split('@')[0], sess.jid)
-            return getUtility(IIntelligent).command(
-                self, data['command'].strip(),
-                data['args']).addCallback(respond)
-        self.session_id = 'anon@chat.3ca.org.uk/%s' % sessionid
-        return getUtility(IIntelligent).command(
-            self, data['command'].strip(), data['args']).addCallback(respond)
+    def speak(self, msg):
+        log.msg('bit.bot.http.request: CommandRequest.speak ', msg)
+        self.response(dict(emit={'respond': msg}))
