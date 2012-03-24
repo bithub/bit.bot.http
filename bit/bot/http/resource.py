@@ -1,5 +1,6 @@
 import os
 
+from twisted.python import log
 from twisted.web import static
 from twisted.web.resource import Resource
 
@@ -17,6 +18,7 @@ class BotResource(Resource):
     _ext = []
 
     def add_resources(self, dir_target, parent=None):
+        log.msg('bit.bot.http.resource: BotResource.add_resources')
         from bit.bot.http.folder import BotFolder
         for f in os.listdir(dir_target):
             if os.path.isdir(os.path.join(dir_target, f)):
@@ -24,7 +26,7 @@ class BotResource(Resource):
             for ext in self._ext:
                 if f.endswith('.%s' % ext):
                     file_path = os.path.join(dir_target, f)
-                    print 'adding resource: %s' % file_path
+                    log.msg('bit.bot.http.resource: adding resource: ', f)
                     (parent or self).putChild(f, static.File(file_path))
 
         for subf in os.listdir(dir_target):

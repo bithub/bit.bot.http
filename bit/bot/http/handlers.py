@@ -2,6 +2,8 @@ import json
 
 from zope.component import adapter, getUtility
 
+from twisted.python import log
+
 from bit.core.interfaces import ISockets
 from bit.bot.common.interfaces import ISubscriptions, IFlatten
 from bit.bot.http.events import SocketCreatedEvent,\
@@ -9,7 +11,6 @@ from bit.bot.http.events import SocketCreatedEvent,\
 
 
 def socket_updated(evt):
-    print 'SOCKET UPDATE'
     subs = getUtility(ISubscriptions)
 
     def _gotSockets(sockets):
@@ -26,25 +27,19 @@ def socket_updated(evt):
 
 @adapter(SocketCreatedEvent)
 def socket_created(evt):
+    log.msg('bit.bot.http.handlers: socket_created')
     socket_updated(evt)
 
 
 @adapter(SocketLostEvent)
 def socket_lost(evt):
+    log.msg('bit.bot.http.handlers: socket_lost')
     socket_updated(evt)
 
 
 @adapter(ClientAuthEvent)
 def client_auth(evt):
-    return evt.socket.transport.write(
-        json.dumps(dict(
-                emit={'helo': evt.session_id},
-                bit=dict(
-                    bot=dict(
-                        session=(dict(jid='anon@chat.3ca.org.uk/'
-                                      + evt.session_id,
-                                      persistent=False
-                                      )))))))
+    log.msg('bit.bot.http.handlers: socket_auth')
     evt.socket.transport.write(
         json.dumps(dict(emit={'helo': ''},
                         bit=dict(bot=dict(session=(dict(jid=evt.session.jid,

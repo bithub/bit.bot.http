@@ -4,6 +4,7 @@ from zope.component import getUtility, queryAdapter
 from zope.interface import implements
 from zope.event import notify
 
+from twisted.python import log
 from twisted.internet.protocol import Factory
 from twisted.protocols.stateful import StatefulProtocol
 
@@ -18,6 +19,7 @@ class BotSocketProtocol(StatefulProtocol):
     implements(IBotSocket)
 
     def connectionMade(self):
+        log.msg('bit.bot.http.socket: BotSocketProtocol.connectionMade')
         # send the current data model
         notify(SocketCreatedEvent(self))
         self.sessionid = None
@@ -30,11 +32,13 @@ class BotSocketProtocol(StatefulProtocol):
         self.transport.write(json.dumps(dict(bit=bit, emit=emit)))
 
     def connectionLost(self, reason):
+        log.msg('bit.bot.http.socket: BotSocketProtocol.connectionLost')
         notify(SocketLostEvent(self).update(self.sessionid, reason))
         if self.sessionid:
             getUtility(ISockets).remove('bot', self.sessionid, self)
 
     def dataReceived(self, data):
+        log.msg('bit.bot.http.socket: BotSocketProtocol.dataReceived')
         data = json.loads(data)
         sessionid = data['session'].replace('-', '')
         self.sessionid = sessionid
@@ -60,6 +64,7 @@ class BotSocketProtocol(StatefulProtocol):
         pass
 
     def speak(self, jid, msg, asker):
+        log.msg('bit.bot.http.socket: BotSocketProtocol.speak')
         self.transport.write(json.dumps(dict(emit={'respond': msg})))
 
 
@@ -72,6 +77,7 @@ class Sockets(object):
     _sockets = {}
 
     def add(self, socket_type, socket_id, token, socket):
+        log.msg('bit.bot.http.socket: Sockets.add')
         if not socket_type in self._sockets:
             self._sockets[socket_type] = {}
 
@@ -82,6 +88,7 @@ class Sockets(object):
             self._sockets[socket_type][socket_id].add(socket)
 
     def remove(self, socket_type, socket_id, token=None, socket=None):
+        log.msg('bit.bot.http.socket: Sockets.remove')
         if not socket_type in self._sockets:
             return
         if not socket_id in self._sockets[socket_type]:
@@ -98,6 +105,7 @@ class Sockets(object):
 
     def emit(self, socket_type, session_id,
              emmission, msg, token=None, bit_ac=None, bit={}, omit=[]):
+        log.msg('bit.bot.http.socket: Sockets.emit')
         if not session_id in self.sockets[socket_type]:
             return
         for socket in self.sockets[socket_type][session_id]:
