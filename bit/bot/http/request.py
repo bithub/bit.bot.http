@@ -12,6 +12,7 @@ from bit.bot.common.interfaces import IIntelligent, ISessions,\
 from bit.bot.http.events import ClientAuthEvent
 from bit.bot.http.interfaces import IHTTPSocketRequest
 
+
 class SocketRequest(object):
     def __init__(self, proto):
         self.proto = proto

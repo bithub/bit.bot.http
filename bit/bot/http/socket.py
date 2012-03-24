@@ -61,12 +61,15 @@ class BotSocketProtocol(StatefulProtocol):
                     data['command'] = message.strip().split(' ')[0]
                     data['args'] = ' '.join(message.strip().split(' ')[1:])
                 elif message.startswith('~'):
-                    request = getAdapter(self, ISocketRequest, name="subscribe")
+                    request = getAdapter(
+                        self, ISocketRequest, name="subscribe")
                     data['subscribe'] = message[1:]
                 else:
-                    request = getAdapter(self, ISocketRequest, name="message")
+                    request = getAdapter(
+                        self, ISocketRequest, name="message")
             else:
-                request = queryAdapter(self, ISocketRequest, name=data['request'])
+                request = queryAdapter(
+                    self, ISocketRequest, name=data['request'])
 
             if request:
                 request.load(sessionid, sess, data)
