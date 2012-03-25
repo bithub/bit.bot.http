@@ -9,7 +9,7 @@ from bit.bot.http.interfaces import IHTTPRoot
 
 
 def getHTTPSPort():
-    return int(getUtility(IConfiguration).get('https', 'port'))
+    return int(getUtility(IConfiguration).get('https', 'port') or 0)
 
 
 def getHTTPSSite():
@@ -19,15 +19,16 @@ def getHTTPSSite():
 class SSLContextFactory(object):
     def getContext(self):
         ctx = SSL.Context(SSL.SSLv23_METHOD)
-        ctx.use_certificate_file(
-            getUtility(IConfiguration).get('https', 'cert'))
-        ctx.use_privatekey_file(
-            getUtility(IConfiguration).get('https', 'key'))
-        return ctx
+        cert = getUtility(IConfiguration).get('https', 'cert')
+        key = getUtility(IConfiguration).get('https', 'key')
+        if cert and key:
+            ctx.use_certificate_file(cert)
+            ctx.use_privatekey_file(key)
+            return ctx
 
 
 def getWSSPort():
-    return int(getUtility(IConfiguration).get('wss', 'port'))
+    return int(getUtility(IConfiguration).get('wss', 'port') or 0)
 
 
 def getFlashPolicyPort():
