@@ -137,8 +137,8 @@ class CommandRequest(SocketRequest):
     implements(IHTTPSocketRequest)
 
     def response(self, msg):
-        log.msg('bit.bot.http.request: CommandRequest.response ',
-                msg)
+        log.msg(
+            'bit.bot.http.request: CommandRequest.response ', msg)
         self.proto.transport.write(json.dumps(msg))
 
     def load(self, sessionid, sess, data):

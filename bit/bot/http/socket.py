@@ -49,6 +49,9 @@ class BotSocketProtocol(StatefulProtocol):
                 token = token[1]
 
         def _gotSession(sess):
+            log.msg(
+                'bit.bot.http.socket: BotSocketProtocol.dataReceived._gotSession'
+                ,sess)
             if sess:
                 getUtility(ISockets).add('bot', sessionid, token, self)
             request = queryAdapter(self, ISocketRequest, name=data['request'])

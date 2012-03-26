@@ -20,10 +20,10 @@ Lets start by creating a configuration for our app
     ... port = 1027    
     ... 
     ... [wss]
-    ... port = 8383
+    ... port = 8282
     ... 
     ... [flash-policy]
-    ... port = 3838
+    ... port = 2828
     ... 
     ... """
 
@@ -72,6 +72,12 @@ bit.bot.http.services
 
 fetching a web page
 -------------------
+
+Lets start the web services
+
+    >>> http_multi.startService()
+    >>> http_service.running
+    1
 
     >>> import twisted.web.client
     >>> def got_page(resp):
