@@ -18,6 +18,6 @@ def test_suite():
     ts = runner.TestSuite()
     ts.name = "bit.bot.http.doctests"
     ts.addTest(doctest.DocFileSuite(
-            "../README.txt", setUp=setUp,
+            "../README.rst", setUp=setUp,
             optionflags=doctest.ELLIPSIS | doctest.NORMALIZE_WHITESPACE))
     return ts

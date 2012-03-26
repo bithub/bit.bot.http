@@ -3,7 +3,7 @@ bit.bot.http
 
     >>> import bit.bot.base
 
-Lets start by creating a configuration for our app    
+Lets start by creating a *configuration* for our app    
 
     >>> test_configuration = """
     ... [bit]
