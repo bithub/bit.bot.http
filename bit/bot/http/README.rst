@@ -3,7 +3,7 @@ bit.bot.http
 
     >>> import bit.bot.base
 
-Lets start by creating a *configuration* for our app    
+Lets start by creating a configuration for our app    
 
     >>> test_configuration = """
     ... [bit]
@@ -36,10 +36,9 @@ Our http multi-service has been registered with the applications service collect
     >>> sc.namedServices.keys()
     [u'bit.bot.http']
 
-    >>> import zope
-
 We can also get to our services with the IServices utility
 
+    >>> import zope
     >>> services = zope.component.getUtility(bit.core.interfaces.IServices)
     >>> http_multi = services.services['bit.bot.http']
     >>> http_multi
