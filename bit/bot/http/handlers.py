@@ -42,6 +42,9 @@ def client_auth(evt):
     log.msg('bit.bot.http.handlers: socket_auth')
     evt.socket.transport.write(
         json.dumps(dict(emit={'helo': ''},
-                        bit=dict(bot=dict(session=(dict(jid=evt.session.jid,
+                        token=evt.session.token,
+                        session=evt.session.hex,
+                        bit=dict(bot=dict(session=(dict(owner=evt.session.owner,
+                                                        token=evt.session.token,
                                                         persistent=True
                                                         )))))))

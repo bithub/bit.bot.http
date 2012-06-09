@@ -42,7 +42,7 @@ class BotSocketProtocol(StatefulProtocol):
         data = json.loads(data)
         sessionid = data['session'].replace('-', '')
         self.sessionid = sessionid
-        token = data.get('__bit_ac', None)
+        token = data.get('token', None)
         if token:
             token = token.split('=')
             if token[0] == '__bit_ac' and len(token) > 1:
@@ -50,12 +50,13 @@ class BotSocketProtocol(StatefulProtocol):
 
         def _gotSession(sess):
             log.msg(
-                'bit.bot.http.socket: BotSocketProtocol.dataReceived._gotSession'
-                ,sess)
+                'bit.bot.http.socket: BotSocketProtocol.dataReceived._gotSession',
+                sess)
+
             if sess:
                 getUtility(ISockets).add('bot', sessionid, token, self)
             request = queryAdapter(self, ISocketRequest, name=data['request'])
-
+            
             if data['request'] == 'message':
                 message = data['message']
                 if message.startswith('>'):
@@ -78,9 +79,9 @@ class BotSocketProtocol(StatefulProtocol):
                 request.load(sessionid, sess, data)
             else:
                 print 'NO REQUEST ADAPTER FOR: %s' % data['request']
-
+            
         getUtility(ISessions).session(
-            sessionid, token=token).addCallback(_gotSession)
+            sessionid, token=token, session_type='ws').addCallback(_gotSession)
 
     def getInitialState(self):
         pass
@@ -134,7 +135,7 @@ class Sockets(object):
             if bit_ac:
                 socket.transport.write(json.dumps(dict(emit={emmission: msg},
                                                        bit=bit,
-                                                       __bit_ac=bit_ac,
+                                                       token=bit_ac,
                                                        )))
             else:
                 socket.transport.write(json.dumps(dict(emit={emmission: msg},

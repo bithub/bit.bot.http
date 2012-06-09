@@ -22,7 +22,8 @@ class AuthRequest(SocketRequest):
     implements(IHTTPSocketRequest)
 
     def load(self, sessionid, sess, data):
-        log.msg('bit.bot.http.request: AuthRequest.load ', data['message'])
+
+        log.msg('bit.bot.http.request: AuthRequest.load: ',  sess.hex)
         kernel = getUtility(IIntelligent).bot
 
         def _gotSession(sess):
@@ -63,6 +64,7 @@ class AuthRequest(SocketRequest):
                 ).addCallback(_gotPersonSessions, anon_jid, person)
 
         def isauth(person, personname, anon_jid):
+
             if not person:
                 self.proto.speak(anon_jid,
                                  "I've no idea who you are,"
@@ -79,9 +81,9 @@ class AuthRequest(SocketRequest):
                 jid=person_jid, session_type="curate"
                 ).addCallback(_gotThisSession, anon_jid, person)
 
-        anon_jid = 'anon@chat.3ca.org.uk/%s' % sessionid
         personname = kernel.getPredicate(
-            kernel._inputHistory, anon_jid)[-1:].pop().strip()
+            kernel._inputHistory, sessionid)[-1:].pop().strip()
+        
         return getUtility(IMembers).auth(
             personname, data['password'].strip()
             ).addCallback(isauth, personname, anon_jid)
@@ -99,13 +101,16 @@ class MessageRequest(SocketRequest):
         kernel = getUtility(IIntelligent).bot
 
         if sess:
-            self.session_id = sess.jid
-            getUtility(ISessions).stamp(sessionid)
+            self.session_id = sess.hex
+            getUtility(ISessions).stamp(sess.hex)
             #notify(SocketSessionEvent(self).update(sessionid))
-            kernel.setPredicate('secure', "yes", sess.jid)
-            kernel.setPredicate('name', sess.jid.split('@')[0], sess.jid)
+            if sess.owner:
+                kernel.setPredicate('secure', "yes", sess.owner)
+                kernel.setPredicate('name', sess.owner.split('@')[0], sess.hex)
             return getUtility(IIntelligent).respond(
                 self, data['message'].strip()).addCallback(self.speak)
+
+        # maybe remove...
         self.session_id = 'anon@chat.3ca.org.uk/%s' % sessionid
         return getUtility(IIntelligent).respond(
             self, data['message'].strip()).addCallback(self.speak)
