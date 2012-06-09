@@ -25,12 +25,3 @@ class SSLContextFactory(object):
             ctx.use_certificate_file(cert)
             ctx.use_privatekey_file(key)
             return ctx
-
-
-def getWSSPort():
-    return int(getUtility(IConfiguration).get('wss', 'port') or 0)
-
-
-def getFlashPolicyPort():
-    return 8043
-#return int(getUtility(IConfiguration).get('wss','port'))

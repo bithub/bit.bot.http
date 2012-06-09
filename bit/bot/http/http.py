@@ -14,7 +14,3 @@ def getHTTPPort():
 
 def getHTTPSite():
     return server.Site(getUtility(IHTTPRoot))
-
-
-def getWSPort():
-    return int(getUtility(IConfiguration).get('ws', 'port') or 0)
