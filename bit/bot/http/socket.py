@@ -75,8 +75,9 @@ class BotSocketProtocol(StatefulProtocol):
                 request = queryAdapter(
                     self, ISocketRequest, name=data['request'])
 
-            if request:
+            if request:                
                 request.load(sessionid, sess, data)
+
             else:
                 print 'NO REQUEST ADAPTER FOR: %s' % data['request']
             

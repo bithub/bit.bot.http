@@ -30,24 +30,30 @@ class AuthRequest(SocketRequest):
             kernel.setPredicate('secure', "yes", sess.jid)
             kernel.setPredicate('name', personname, sess.jid)
             self.proto.speak(sess.jid, 'welcome %s' % personname, anon_jid)
-            return getUtility(ISessions).activate(self.proto, sess)
+            
+
+
+            #return getUtility(ISessions).activate(self.proto, sess)
 
         def _gotPersonSessions(sessions, anon_jid, person):
             # there could be many, but we'll take the first one,
             # we should check which was last accessed
             for session in sessions:
-                kernel.setPredicate('secure', "yes", session.jid)
-                kernel.setPredicate('name', personname, session.jid)
+                kernel.setPredicate('secure', "yes", session.hex)
+                kernel.setPredicate('name', personname, person.jid)
                 self.proto.speak(anon_jid, 'welcome %s' % person.id, anon_jid)
                 return getUtility(ISessions).activate(self.proto, session)
+
             # ok no existing session, lets add one
             session_id = anon_jid.split('/')[1]
-            person_jid = '%s/%s' % (person.jid, session_id)
+            session_id = '%s/%s' % (person.jid, session_id)
             getUtility(ISessions).add_session(
-                session_id=sessionid, jid=person_jid, session_type='curate'
+                session_id=session_id, owner=person.jid, session_type='ws'
                 ).addCallback(_gotSession)
 
+
         def _gotThisSession(sessions, anon_jid, person):
+
             for session in sessions:
                 kernel.setPredicate('secure', "yes", session.jid)
                 kernel.setPredicate('name', person.id, session.jid)
@@ -60,7 +66,7 @@ class AuthRequest(SocketRequest):
             # ok, this isnt a saved session,
             # does this user have another saved bot sesssion?
             getUtility(ISessions).sessions(
-                person=person_jid.split('/')[0], session_type="curate"
+                owner=person_jid.split('/')[0], session_type="ws"
                 ).addCallback(_gotPersonSessions, anon_jid, person)
 
         def isauth(person, personname, anon_jid):
@@ -74,19 +80,20 @@ class AuthRequest(SocketRequest):
 
             sessions = getUtility(ISessions)
             session_id = anon_jid.split('/')[1]
+
             person_jid = '%s/%s' % (person.jid, session_id)
 
             # is this session an existing session?
             sessions.sessions(
-                jid=person_jid, session_type="curate"
+                session_id=person_jid, session_type="curate"
                 ).addCallback(_gotThisSession, anon_jid, person)
 
         personname = kernel.getPredicate(
             kernel._inputHistory, sessionid)[-1:].pop().strip()
-        
+                
         return getUtility(IMembers).auth(
             personname, data['password'].strip()
-            ).addCallback(isauth, personname, anon_jid)
+            ).addCallback(isauth, personname, sessionid)
 
 
 class MessageRequest(SocketRequest):
